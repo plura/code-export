@@ -25,8 +25,6 @@ It can concatenate files into a single text output, generate directory trees, fi
 - PHP 8.0 or later (CLI)
 - Access to the project files you want to export
 
-No additional PHP extensions are required for basic usage.
-
 ---
 
 ## Installation
@@ -44,15 +42,11 @@ The main script lives in `src/code-export.php`. You can run it directly with `ph
 php src/code-export.php --help
 ```
 
-(If you place the script elsewhere or rename it, adjust the paths in the examples below.)
-
 ---
 
 ## Basic usage
 
 ### Concat mode
-
-Concatenate files under a directory into a single text file:
 
 ```sh
 php src/code-export.php \
@@ -63,16 +57,12 @@ php src/code-export.php \
 
 ### Directory tree mode
 
-Generate a directory tree as text:
-
 ```sh
 php src/code-export.php \
 	--mode=tree \
 	--source=./some-project \
 	--output=./export/project.tree.txt
 ```
-
-You can combine these outputs when sending a project to an AI tool: the tree gives an overview, and the concatenated file provides the actual code.
 
 ---
 
@@ -90,7 +80,7 @@ Example `concat-jobs.example.json`:
 			"source": "./some-project",
 			"output": "./export/project.concat.txt",
 			"exclude_paths": ["node_modules", "vendor", "dist"],
-			"ext": "php,js,jsx,ts,tsx,css,scss,html,json",
+			"ext": ["php", "js", "jsx", "ts", "tsx", "css", "scss", "html", "json"],
 			"follow_symlinks": false,
 			"max_bytes": 500000,
 			"allow_binary": false,
@@ -100,13 +90,11 @@ Example `concat-jobs.example.json`:
 }
 ```
 
-Run all jobs in the file:
+Run all jobs in a batch file:
 
 ```sh
-php src/code-export.php --batch=concat-jobs.example.json
+php src/code-export.php --mode=concat --batch=concat-jobs.example.json
 ```
-
-You can also target a single job in the batch file using `--job=NAME` if the script supports it.
 
 ---
 
@@ -114,52 +102,63 @@ You can also target a single job in the batch file using `--job=NAME` if the scr
 
 The most relevant CLI options supported by `code-export` are:
 
-| Option              | Description                                                                              |
-| ------------------- | ---------------------------------------------------------------------------------------- |
-| `--mode=`           | Operation mode: `concat` or `tree`.                                                      |
-| `--source=`         | Directory to scan.                                                                       |
-| `--output=`         | Output file path for the generated text.                                                 |
-| `--exclude_paths=`  | Comma-separated paths to skip (relative to `source`).                                    |
-| `--ext=`            | Comma-separated list of file extensions to include (for concat).                         |
-| `--max_bytes=`      | Skip individual files larger than this size (in bytes).                                  |
-| `--allow_binary`    | Whether to allow binary files in concat output.                                          |
-| `--split_bytes=`    | If greater than zero, split the concatenated output into chunks of this size (in bytes). |
-| `--follow_symlinks` | Whether to follow symlinked directories.                                                 |
-| `--job=`            | Optional job name when using `--batch`.                                                  |
-| `--batch=`          | Path to a JSON file describing one or more jobs.                                         |
-
-Not all options are required for every mode. When using batch JSON files, most of these values are taken from the JSON instead of CLI arguments.
+| Option              | Description                                             |
+| ------------------- | ------------------------------------------------------- |
+| `--mode=`           | Operation mode: `concat` or `tree`.                     |
+| `--source=`         | Directory to scan.                                      |
+| `--output=`         | Output file path.                                       |
+| `--exclude_paths=`  | Comma-separated paths to skip.                          |
+| `--ext=`            | Array of file extensions to include (concat mode only). |
+| `--max_bytes=`      | Skip files larger than this size (bytes).               |
+| `--allow_binary`    | Allow binary files in concat output.                    |
+| `--split_bytes=`    | Split output into chunks of this size (bytes).          |
+| `--follow_symlinks` | Whether to follow symlinked directories.                |
+| `--job=`            | Run a specific job inside a batch.                      |
+| `--batch=`          | Path to a JSON batch file defining one or more jobs.    |
 
 ---
 
 ## Example test project
 
 This repository includes a small React + PHP example app under `test/react-php-app/`.
+It exists only to provide a realistic project structure for `code-export`.
 
-It exists only to provide a realistic project structure for `code-export`, with nested folders, multiple file types, and a simple frontend/backed split.
+The config files under `test/code-export-config/` define example jobs for concatenation and directory trees.
 
-The JSON configuration files under `test/code-export-config/` define a few example jobs:
+### Concat jobs
 
-* `concat-jobs.example.json`
+Defined in `test/code-export-config/concat-jobs.example.json`:
 
-  * `frontend-only`: concatenate only the React frontend files
-  * `backend-only`: concatenate only the PHP backend files
-  * `full-react-php-app`: concatenate both frontend and backend, with output splitting enabled
+* `frontend-code` – concatenates the React JS/JSX files
+* `frontend-styles` – concatenates all CSS under the React app
+* `backend-only` – concatenates the PHP backend source
 
-* `tree-jobs.example.json`
-
-  * `full-tree`: directory tree for the entire example app
-  * `backend-tree`: directory tree for the backend only
-
-Assuming the CLI script is at `src/code-export.php`, you can run:
+Run them with:
 
 ```sh
-php src/code-export.php --batch=test/code-export-config/concat-jobs.example.json
-
-php src/code-export.php --batch=test/code-export-config/tree-jobs.example.json
+php src/code-export.php --mode=concat --batch=test/code-export-config/concat-jobs.example.json
 ```
 
-The outputs are written into `test/output/` by default (you may need to create this directory the first time).
+### Tree jobs
+
+Defined in `test/code-export-config/tree-jobs.example.json`:
+
+* `full-tree` – directory tree of the entire example app
+* `backend-tree` – directory tree of the backend only
+
+Run them with:
+
+```sh
+php src/code-export.php --mode=tree --batch=test/code-export-config/tree-jobs.example.json
+```
+
+Outputs are written into `test/output/`.
+
+---
+
+## Changelog
+
+For a list of changes and release notes, see [CHANGELOG.md](./CHANGELOG.md).
 
 ---
 
