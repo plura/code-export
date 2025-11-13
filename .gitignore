@@ -1,3 +1,7 @@
+# DDEV
+/.ddev/*
+!/.ddev/config.yaml
+
 # PHP / Composer
 /vendor/
 
@@ -6,7 +10,7 @@
 /dist/
 
 # Test output
-#/test/output/
+# /test/output/
 
 # IDE / editor settings
 /.idea/
