@@ -1,0 +1,17 @@
+# PHP / Composer
+/vendor/
+
+# Node / frontend
+/node_modules/
+/dist/
+
+# Test output
+#/test/output/
+
+# IDE / editor settings
+/.idea/
+/.vscode/
+
+# OS files
+.DS_Store
+Thumbs.db

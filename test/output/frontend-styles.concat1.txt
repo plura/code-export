@@ -1,0 +1,283 @@
+Concatenated code export
+Source (dir): test/react-php-app/frontend/src/styles
+Excluded (names): node_modules,vendor,.git,dist,build,.ddev,.idea,.vscode,.next,.turbo,.cache,.pnpm-store
+Excluded (paths): node_modules,dist,git
+Generated: 2025-11-13T16:31:51+00:00
+Extensions: css
+Chunk: 1
+-------------------------------------------------
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/theme/colors.css
+-------------------------------------------------
+
+:root {
+	--color-bg-page: #f5f5f5;
+	--color-bg-surface: #ffffff;
+	--color-bg-hero: #101827;
+	--color-bg-footer: #111827;
+
+	--color-text-main: #111827;
+	--color-text-muted: #6b7280;
+	--color-text-hero: #e5e7eb;
+	--color-text-accent: #2563eb;
+
+	--color-border-soft: #e5e7eb;
+	--color-border-strong: #9ca3af;
+
+	--color-primary: #2563eb;
+	--color-primary-soft: #dbeafe;
+	--color-danger: #dc2626;
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/theme/layout.css
+-------------------------------------------------
+
+body {
+	background-color: var(--color-bg-page);
+	color: var(--color-text-main);
+}
+
+.app-root {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.app-header {
+	background-color: var(--color-bg-surface);
+	border-bottom: 1px solid var(--color-border-soft);
+}
+
+.app-header__inner {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 1rem 1.5rem;
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1.5rem;
+}
+
+.app-header__logo {
+	font-weight: 700;
+	margin-right: 0.5rem;
+}
+
+.app-header__subtitle {
+	color: var(--color-text-muted);
+	font-size: 0.9rem;
+}
+
+.app-header__nav a {
+	margin-left: 1rem;
+	text-decoration: none;
+	color: var(--color-text-main);
+	font-weight: 500;
+}
+
+.app-header__nav a.is-active {
+	color: var(--color-text-accent);
+}
+
+.app-main {
+	flex: 1;
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 2rem 1.5rem 3rem;
+}
+
+.app-section {
+	margin-top: 2rem;
+	padding: 1.5rem;
+	border-radius: 0.5rem;
+	background-color: var(--color-bg-surface);
+	border: 1px solid var(--color-border-soft);
+}
+
+.app-section__title {
+	margin-bottom: 0.5rem;
+}
+
+.app-section__intro {
+	color: var(--color-text-muted);
+}
+
+.app-footer {
+	background-color: var(--color-bg-footer);
+	color: var(--color-text-hero);
+}
+
+.app-footer__inner {
+	max-width: 960px;
+	margin: 0 auto;
+	padding: 1rem 1.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	font-size: 0.9rem;
+}
+
+.app-footer__meta span + span {
+	margin-left: 1rem;
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/base/typography.css
+-------------------------------------------------
+
+body {
+	line-height: 1.5;
+	font-size: 16px;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	margin: 0 0 0.5rem;
+	font-weight: 600;
+}
+
+p {
+	margin: 0 0 1rem;
+}
+
+code {
+	font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, 'Liberation Mono', 'Courier New', monospace;
+	font-size: 0.9em;
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/base/reset.css
+-------------------------------------------------
+
+/* Very small reset for the test project */
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html,
+body {
+	margin: 0;
+	padding: 0;
+}
+
+body {
+	font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+	background-color: #f5f5f5;
+	color: #222;
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/pages/home.css
+-------------------------------------------------
+
+.page--home .page__content {
+	margin-top: 1.5rem;
+}
+
+.hero--home {
+	background-color: var(--color-bg-hero);
+	color: var(--color-text-hero);
+	padding: 2.5rem 1.5rem;
+	border-radius: 0.75rem;
+}
+
+.hero__content {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.hero__title {
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.hero__subtitle {
+	color: var(--color-primary-soft);
+	margin-bottom: 1rem;
+}
+
+.hero__list {
+	padding-left: 1.25rem;
+	margin: 0;
+}
+
+.hero__list li {
+	margin-bottom: 0.25rem;
+}
+
+/* Todo list */
+
+.todo-list {
+	list-style: none;
+	padding: 0;
+	margin: 1rem 0 0;
+}
+
+.todo-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid var(--color-border-soft);
+}
+
+.todo-item__label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.todo-item__checkbox {
+	cursor: pointer;
+}
+
+.todo-item__text {
+	cursor: pointer;
+}
+
+.todo-item__text.is-completed {
+	text-decoration: line-through;
+	color: var(--color-text-muted);
+}
+
+.todo-item__remove {
+	border: 1px solid var(--color-border-strong);
+	background: transparent;
+	color: var(--color-danger);
+	padding: 0.25rem 0.75rem;
+	border-radius: 999px;
+	cursor: pointer;
+	font-size: 0.85rem;
+}
+
+.todo-empty {
+	margin-top: 1rem;
+	color: var(--color-text-muted);
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/styles/pages/about.css
+-------------------------------------------------
+
+.page--about .page__header {
+	margin-bottom: 1rem;
+}
+
+.page--about .page__content {
+	background-color: var(--color-bg-surface);
+	border-radius: 0.5rem;
+	border: 1px solid var(--color-border-soft);
+	padding: 1.5rem;
+}
+
+.page--about p + p {
+	margin-top: 0.75rem;
+}
+

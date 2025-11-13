@@ -1,0 +1,26 @@
+{
+	"jobs": [
+		{
+			"name": "full-tree",
+			"source": "test/react-php-app",
+			"output": "test/output/full-app.tree.txt",
+			"exclude_paths": [
+				"node_modules",
+				"dist",
+				"vendor",
+				".git"
+			],
+			"follow_symlinks": false
+		},
+		{
+			"name": "backend-tree",
+			"source": "test/react-php-app/backend",
+			"output": "test/output/backend.tree.txt",
+			"exclude_paths": [
+				"vendor",
+				".git"
+			],
+			"follow_symlinks": false
+		}
+	]
+}

@@ -1,0 +1,532 @@
+Concatenated code export
+Source (dir): test/react-php-app/backend
+Excluded (names): node_modules,vendor,.git,dist,build,.ddev,.idea,.vscode,.next,.turbo,.cache,.pnpm-store
+Excluded (paths): vendor,tests,git
+Generated: 2025-11-13T16:31:51+00:00
+Extensions: php
+Chunk: 1
+-------------------------------------------------
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Bootstrap.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+use App\Infrastructure\Database\Connection;
+use App\Domain\Todo\TodoRepository;
+
+final class Bootstrap
+{
+	private string $configDir;
+
+	private array $config;
+
+	public function __construct(string $configDir)
+	{
+		$this->configDir = rtrim($configDir, '/\\');
+		$this->config = $this->loadConfig();
+		$this->registerAutoloader();
+	}
+
+	private function loadConfig(): array
+	{
+		$config = [];
+
+		$configFile = $this->configDir . '/config.php';
+		if (is_file($configFile)) {
+			$config = require $configFile;
+		}
+
+		$localFile = $this->configDir . '/env.local.php';
+		if (is_file($localFile)) {
+			$localConfig = require $localFile;
+
+			// Very small and naive deep-merge
+			$config = array_replace_recursive($config, $localConfig);
+		}
+
+		return $config;
+	}
+
+	private function registerAutoloader(): void
+	{
+<|diff_marker|> ADD A1000
+		spl_autoload_register(function (string $class): void {
+			$prefix = 'App\\';
+			if (strpos($class, $prefix) !== 0) {
+				return;
+			}
+
+			$relative = substr($class, strlen($prefix));
+			$relativePath = str_replace('\\', DIRECTORY_SEPARATOR, $relative) . '.php';
+
+			$baseDir = __DIR__;
+			$path = $baseDir . DIRECTORY_SEPARATOR . $relativePath;
+
+			if (is_file($path)) {
+				require $path;
+			}
+		});
+	}
+
+	public function getConfig(): array
+	{
+<|diff_marker|> ADD A1020
+		return $this->config;
+	}
+
+	public function getDatabaseConnection(): Connection
+	{
+		$dbConfig = $this->config['database'] ?? [];
+
+		return new Connection(
+			(string) ($dbConfig['dsn'] ?? ''),
+			(string) ($dbConfig['user'] ?? ''),
+			(string) ($dbConfig['password'] ?? '')
+		);
+	}
+
+	public function getTodoRepository(): TodoRepository
+	{
+		// For this test project the repository does not rely on a real database,
+		// but we still pass a Connection instance to make the structure realistic.
+		$connection = $this->getDatabaseConnection();
+
+<|diff_marker|> ADD A1040
+		return new TodoRepository($connection);
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Infrastructure/Database/Connection.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Infrastructure\Database;
+
+/**
+<|diff_marker|> ADD A1280
+ * Placeholder database connection class.
+ *
+ * In a real application this would wrap PDO or another driver, but for this
+ * test project it only stores configuration values so other classes have
+ * something realistic to type-hint against.
+ */
+final class Connection
+{
+	private string $dsn;
+
+	private string $user;
+
+	private string $password;
+
+	public function __construct(string $dsn, string $user, string $password)
+	{
+		$this->dsn = $dsn;
+		$this->user = $user;
+		$this->password = $password;
+	}
+<|diff_marker|> ADD A1300
+
+	public function getDsn(): string
+	{
+		return $this->dsn;
+	}
+
+	public function getUser(): string
+	{
+		return $this->user;
+	}
+
+	public function getPassword(): string
+	{
+		return $this->password;
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Domain/Todo/TodoRepository.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Todo;
+
+use App\Infrastructure\Database\Connection;
+
+<|diff_marker|> ADD A1240
+/**
+ * Very small repository implementation.
+ *
+ * For this test project we do not actually talk to a database. The repository
+ * simply returns a static list so the surrounding code has something to work with.
+ */
+final class TodoRepository
+{
+	private Connection $connection;
+
+	public function __construct(Connection $connection)
+	{
+		$this->connection = $connection;
+	}
+
+	/**
+	 * @return Todo[]
+	 */
+	public function findAll(): array
+	{
+<|diff_marker|> ADD A1260
+		return [
+			new Todo(1, 'Review React components in the test app', false),
+			new Todo(2, 'Check PHP backend controllers and domain layer', true),
+			new Todo(3, 'Adjust code-export JSON configuration', false),
+		];
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Domain/Todo/Todo.php
+-------------------------------------------------
+
+<|diff_marker|> ADD A1180
+<?php
+
+declare(strict_types=1);
+
+namespace App\Domain\Todo;
+
+final class Todo
+{
+	private int $id;
+
+	private string $title;
+
+	private bool $completed;
+
+	public function __construct(int $id, string $title, bool $completed = false)
+	{
+		$this->id = $id;
+		$this->title = $title;
+		$this->completed = $completed;
+	}
+
+<|diff_marker|> ADD A1200
+	public function getId(): int
+	{
+		return $this->id;
+	}
+
+	public function getTitle(): string
+	{
+		return $this->title;
+	}
+
+	public function isCompleted(): bool
+	{
+		return $this->completed;
+	}
+
+	public function markCompleted(): void
+	{
+		$this->completed = true;
+	}
+
+<|diff_marker|> ADD A1220
+	public function markPending(): void
+	{
+		$this->completed = false;
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Router.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App;
+
+use App\Http\Controller\Api\TodoController;
+use App\Http\Controller\Api\HealthcheckController;
+
+final class Router
+<|diff_marker|> ADD A1060
+{
+	private Bootstrap $bootstrap;
+
+	public function __construct(Bootstrap $bootstrap)
+	{
+		$this->bootstrap = $bootstrap;
+	}
+
+	/**
+	 * Handle a simple endpoint string and delegate to the correct controller.
+	 *
+	 * In a real project this method would be much more complex and
+	 * aware of HTTP methods, paths, headers and so on.
+	 */
+	public function handle(string $endpoint): array
+	{
+		switch ($endpoint) {
+			case 'health':
+				$controller = new HealthcheckController($this->bootstrap->getConfig());
+				return $controller->check();
+
+<|diff_marker|> ADD A1080
+			case 'todos':
+				$repository = $this->bootstrap->getTodoRepository();
+				$controller = new TodoController($repository);
+				return $controller->listTodos();
+
+			default:
+				http_response_code(404);
+
+				return [
+					'error' => true,
+					'message' => 'Endpoint not found',
+					'endpoint' => $endpoint,
+				];
+		}
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Http/Controller/Api/TodoController.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controller\Api;
+
+use App\Domain\Todo\TodoRepository;
+
+final class TodoController
+{
+	private TodoRepository $repository;
+
+	public function __construct(TodoRepository $repository)
+	{
+		$this->repository = $repository;
+	}
+
+<|diff_marker|> ADD A1120
+	/**
+	 * Return a list of todos.
+	 *
+	 * The returned structure is intentionally small and predictable so it can be
+	 * used in examples on the React side or inspected in concatenated exports.
+	 */
+	public function listTodos(): array
+	{
+		$todos = $this->repository->findAll();
+
+		return [
+			'error' => false,
+			'items' => array_map(static function ($todo): array {
+				return [
+					'id' => $todo->getId(),
+					'title' => $todo->getTitle(),
+					'completed' => $todo->isCompleted(),
+				];
+			}, $todos),
+		];
+<|diff_marker|> ADD A1140
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/src/Http/Controller/Api/HealthcheckController.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Http\Controller\Api;
+
+final class HealthcheckController
+{
+	private array $config;
+
+	public function __construct(array $config)
+<|diff_marker|> ADD A1160
+	{
+		$this->config = $config;
+	}
+
+	public function check(): array
+	{
+		return [
+			'error' => false,
+			'status' => 'ok',
+			'environment' => $this->config['environment'] ?? 'unknown',
+		];
+	}
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/public/index.php
+-------------------------------------------------
+
+<?php
+
+// This is a simple front controller for the PHP backend.
+// In a real project this might serve HTML or bootstrap a framework.
+//
+// For this test app we simply return a small HTML page that explains
+// this backend is here only to support the code-export examples.
+
+?>
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<title>PHP Backend · React + PHP Test App</title>
+	</head>
+	<body>
+		<h1>PHP Backend</h1>
+		<p>
+			This is a minimal PHP backend used as part of the React + PHP test app. It exists only
+			to provide realistic-looking PHP code and folder structure for the <code>code-export</code> tool.
+		</p>
+		<p>
+			Try the JSON endpoints:
+		</p>
+		<ul>
+			<li><code>/public/api.php?endpoint=health</code></li>
+			<li><code>/public/api.php?endpoint=todos</code></li>
+		</ul>
+	</body>
+</html>
+
+-------------------------------------------------
+ test/react-php-app/backend/public/api.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+use App\Bootstrap;
+use App\Http\Router;
+
+require __DIR__ . '/../src/Bootstrap.php';
+
+// Bootstrap and create the router
+$bootstrap = new Bootstrap(__DIR__ . '/../config');
+$router = new Router($bootstrap);
+
+// Resolve the endpoint. In a real application you might inspect the
+// HTTP method and path; here we keep it intentionally simple.
+$endpoint = isset($_GET['endpoint']) ? (string) $_GET['endpoint'] : '';
+
+header('Content-Type: application/json; charset=utf-8');
+
+try {
+	$response = $router->handle($endpoint);
+
+	echo json_encode($response, JSON_PRETTY_PRINT | JSON_UNESCAPED_SLASHES);
+} catch (Throwable $exception) {
+	http_response_code(500);
+
+	echo json_encode([
+		'error' => true,
+		'message' => 'Unexpected error in API',
+		'details' => $exception->getMessage(),
+	]);
+}
+
+-------------------------------------------------
+ test/react-php-app/backend/config/config.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+return [
+	'environment' => 'local',
+	'debug' => true,
+
+	// In a real project these values would be loaded from env.local.php
+	// or a similar secrets file that is not committed to version control.
+	'database' => [
+		'dsn' => 'mysql:host=localhost;dbname=react_php_test',
+		'user' => 'root',
+		'password' => '',
+	],
+];
+
+-------------------------------------------------
+ test/react-php-app/backend/config/env.local.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+// Example of a local-only configuration file.
+// This file is intentionally simple and only exists so the test
+// project has something that looks like a local override.
+
+return [
+	'database' => [
+		'dsn' => 'mysql:host=localhost;dbname=react_php_test',
+		'user' => 'local_user',
+		'password' => 'local_password',
+	],
+];
+
+-------------------------------------------------
+ test/react-php-app/backend/tests/Http/Controller/Api/TodoControllerTest.php
+-------------------------------------------------
+
+<?php
+
+declare(strict_types=1);
+
+namespace App\Tests\Http\Controller\Api;
+
+use App\Domain\Todo\TodoRepository;
+use App\Infrastructure\Database\Connection;
+use App\Http\Controller\Api\TodoController;
+use PHPUnit\Framework\TestCase;
+
+/**
+ * Small example test to make the folder structure look realistic.
+ *
+ * This test does not need to be exhaustive; it is enough that it exercises
+ * the controller in a very simple way so the concatenated output has
+ * something that looks like a unit test.
+<|diff_marker|> ADD A1340
+ */
+final class TodoControllerTest extends TestCase
+{
+	public function testListTodosReturnsAtLeastOneItem(): void
+	{
+		$connection = new Connection('sqlite::memory:', '', '');
+		$repository = new TodoRepository($connection);
+		$controller = new TodoController($repository);
+
+		$response = $controller->listTodos();
+
+		$this->assertArrayHasKey('items', $response);
+		$this->assertIsArray($response['items']);
+		$this->assertNotEmpty($response['items']);
+	}
+}
+

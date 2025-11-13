@@ -1,0 +1,49 @@
+{
+	"jobs": [
+		{
+			"name": "frontend-code",
+			"source": "test/react-php-app/frontend/src",
+			"output": "test/output/frontend-code.concat.txt",
+			"exclude_paths": [
+				"../node_modules",
+				"../dist",
+				".git"
+			],
+			"ext": ["js", "jsx"],
+			"follow_symlinks": false,
+			"max_bytes": 500000,
+			"allow_binary": false,
+			"split_bytes": 0
+		},
+		{
+			"name": "frontend-styles",
+			"source": "test/react-php-app/frontend/src/styles",
+			"output": "test/output/frontend-styles.concat.txt",
+			"exclude_paths": [
+				"../node_modules",
+				"../dist",
+				".git"
+			],
+			"ext": ["css"],
+			"follow_symlinks": false,
+			"max_bytes": 500000,
+			"allow_binary": false,
+			"split_bytes": 0
+		},
+		{
+			"name": "backend-only",
+			"source": "test/react-php-app/backend",
+			"output": "test/output/backend.concat.txt",
+			"exclude_paths": [
+				"vendor",
+				"tests",
+				".git"
+			],
+			"ext": ["php"],
+			"follow_symlinks": false,
+			"max_bytes": 500000,
+			"allow_binary": false,
+			"split_bytes": 0
+		}
+	]
+}

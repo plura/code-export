@@ -1,0 +1,78 @@
+Directory tree export
+Output: test/output/full-app.tree.txt
+Generated: 2025-11-13T16:34:42+00:00
+Follow symlinks: false
+Dirs only: false
+Max depth: unlimited
+Excluded (names): node_modules,vendor,.git,dist,build,.ddev,.idea,.vscode,.next,.turbo,.cache,.pnpm-store
+Excluded (paths): node_modules,dist,vendor,git
+Extensions: js,jsx,ts,tsx,php,css,scss,sass,html,htm,md,markdown,json,sql,env,sh,bash,zsh,bat,ps1,xml,yml,yaml,txt,csv,ini,conf,config,toml,lock,mjs,cjs,eslintrc,prettierrc,tsconfig,editorconfig
+------------------------------------------------------------------------
+
+react-php-app/
+├── backend/
+│   ├── config/
+│   │   ├── config.php
+│   │   └── env.local.php
+│   ├── public/
+│   │   ├── api.php
+│   │   └── index.php
+│   ├── src/
+│   │   ├── Domain/
+│   │   │   └── Todo/
+│   │   │       ├── Todo.php
+│   │   │       └── TodoRepository.php
+│   │   ├── Http/
+│   │   │   └── Controller/
+│   │   │       └── Api/
+│   │   │           ├── HealthcheckController.php
+│   │   │           └── TodoController.php
+│   │   ├── Infrastructure/
+│   │   │   └── Database/
+│   │   │       └── Connection.php
+│   │   ├── Bootstrap.php
+│   │   └── Router.php
+│   └── tests/
+│       └── Http/
+│           └── Controller/
+│               └── Api/
+│                   └── TodoControllerTest.php
+├── frontend/
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── layout/
+│   │   │   │   ├── Footer.jsx
+│   │   │   │   └── Header.jsx
+│   │   │   └── todo/
+│   │   │       ├── TodoEmptyState.jsx
+│   │   │       ├── TodoItem.jsx
+│   │   │       └── TodoList.jsx
+│   │   ├── context/
+│   │   │   └── TodoContext.jsx
+│   │   ├── hooks/
+│   │   │   └── useTodos.js
+│   │   ├── pages/
+│   │   │   ├── about/
+│   │   │   │   └── AboutPage.jsx
+│   │   │   └── home/
+│   │   │       ├── HomeHero.jsx
+│   │   │       └── HomePage.jsx
+│   │   ├── styles/
+│   │   │   ├── base/
+│   │   │   │   ├── reset.css
+│   │   │   │   └── typography.css
+│   │   │   ├── pages/
+│   │   │   │   ├── about.css
+│   │   │   │   └── home.css
+│   │   │   └── theme/
+│   │   │       ├── colors.css
+│   │   │       └── layout.css
+│   │   ├── App.jsx
+│   │   └── main.jsx
+│   ├── index.html
+│   ├── package.json
+│   └── vite.config.js
+└── README.md
+
+------------------------------------------------------------------------
+Stats (total): dirs=29, files=34, skipped_name=1, skipped_path=0, skipped_ext=0

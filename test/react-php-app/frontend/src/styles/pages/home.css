@@ -1,0 +1,84 @@
+.page--home .page__content {
+	margin-top: 1.5rem;
+}
+
+.hero--home {
+	background-color: var(--color-bg-hero);
+	color: var(--color-text-hero);
+	padding: 2.5rem 1.5rem;
+	border-radius: 0.75rem;
+}
+
+.hero__content {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+.hero__title {
+	font-size: 2rem;
+	margin-bottom: 0.5rem;
+}
+
+.hero__subtitle {
+	color: var(--color-primary-soft);
+	margin-bottom: 1rem;
+}
+
+.hero__list {
+	padding-left: 1.25rem;
+	margin: 0;
+}
+
+.hero__list li {
+	margin-bottom: 0.25rem;
+}
+
+/* Todo list */
+
+.todo-list {
+	list-style: none;
+	padding: 0;
+	margin: 1rem 0 0;
+}
+
+.todo-item {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 0.5rem 0;
+	border-bottom: 1px solid var(--color-border-soft);
+}
+
+.todo-item__label {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.todo-item__checkbox {
+	cursor: pointer;
+}
+
+.todo-item__text {
+	cursor: pointer;
+}
+
+.todo-item__text.is-completed {
+	text-decoration: line-through;
+	color: var(--color-text-muted);
+}
+
+.todo-item__remove {
+	border: 1px solid var(--color-border-strong);
+	background: transparent;
+	color: var(--color-danger);
+	padding: 0.25rem 0.75rem;
+	border-radius: 999px;
+	cursor: pointer;
+	font-size: 0.85rem;
+}
+
+.todo-empty {
+	margin-top: 1rem;
+	color: var(--color-text-muted);
+}

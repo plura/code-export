@@ -1,0 +1,399 @@
+Concatenated code export
+Source (dir): test/react-php-app/frontend/src
+Excluded (names): node_modules,vendor,.git,dist,build,.ddev,.idea,.vscode,.next,.turbo,.cache,.pnpm-store
+Excluded (paths): node_modules,dist,git
+Generated: 2025-11-13T16:31:51+00:00
+Extensions: js,jsx
+Chunk: 1
+-------------------------------------------------
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/App.jsx
+-------------------------------------------------
+
+import React, { useState } from 'react';
+import Header from './components/layout/Header.jsx';
+import Footer from './components/layout/Footer.jsx';
+import TodoList from './components/todo/TodoList.jsx';
+
+import HomePage from './pages/home/HomePage.jsx';
+import AboutPage from './pages/about/AboutPage.jsx';
+import { TodoProvider } from './context/TodoContext.jsx';
+
+import './styles/pages/home.css';
+import './styles/pages/about.css';
+
+const App = () => {
+	const [activePage, setActivePage] = useState('home');
+
+	const handleNavigate = (page) => {
+		setActivePage(page);
+	};
+
+	const renderPage = () => {
+		if (activePage === 'about') {
+			return <AboutPage />;
+		}
+
+		// Default page is home
+		return (
+			<>
+				<HomePage />
+				<section className="app-section app-section--todos">
+					<h2 className="app-section__title">Todos (Example Data From PHP API)</h2>
+					<p className="app-section__intro">
+						This list is hard-coded for the test project. In a real app, it could be loaded from the PHP backend.
+					</p>
+					<TodoList />
+				</section>
+			</>
+		);
+	};
+
+	return (
+		<TodoProvider>
+			<div className="app-root">
+				<Header onNavigate={handleNavigate} activePage={activePage} />
+
+				<main className="app-main">
+					{renderPage()}
+				</main>
+
+				<Footer />
+			</div>
+		</TodoProvider>
+	);
+};
+
+export default App;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/components/todo/TodoList.jsx
+-------------------------------------------------
+
+import React from 'react';
+import TodoItem from './TodoItem.jsx';
+import TodoEmptyState from './TodoEmptyState.jsx';
+import { useTodos } from '../../hooks/useTodos.js';
+
+const TodoList = () => {
+	const { todos, toggleTodo, removeTodo } = useTodos();
+
+	if (!todos || todos.length === 0) {
+		return <TodoEmptyState />;
+	}
+
+	return (
+		<ul className="todo-list">
+			{todos.map((todo) => (
+				<TodoItem
+					key={todo.id}
+					todo={todo}
+					onToggle={() => toggleTodo(todo.id)}
+					onRemove={() => removeTodo(todo.id)}
+				/>
+			))}
+		</ul>
+	);
+};
+
+export default TodoList;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/components/todo/TodoItem.jsx
+-------------------------------------------------
+
+import React from 'react';
+
+const TodoItem = ({ todo, onToggle, onRemove }) => {
+	return (
+		<li className="todo-item">
+			<label className="todo-item__label">
+				<input
+					type="checkbox"
+					checked={todo.completed}
+					onChange={onToggle}
+					className="todo-item__checkbox"
+				/>
+				<span className={todo.completed ? 'todo-item__text is-completed' : 'todo-item__text'}>
+					{todo.title}
+				</span>
+			</label>
+
+			<button
+				type="button"
+				className="todo-item__remove"
+				onClick={onRemove}
+			>
+				Remove
+			</button>
+		</li>
+	);
+};
+
+export default TodoItem;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/components/todo/TodoEmptyState.jsx
+-------------------------------------------------
+
+import React from 'react';
+
+const TodoEmptyState = () => {
+	return (
+		<div className="todo-empty">
+			<p className="todo-empty__title">No todos yet</p>
+			<p className="todo-empty__text">
+				This is a static example used for testing the code-export tool. In a real project you would start by creating a new item.
+			</p>
+		</div>
+	);
+};
+
+export default TodoEmptyState;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/components/layout/Footer.jsx
+-------------------------------------------------
+
+
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/components/layout/Header.jsx
+-------------------------------------------------
+
+import React from 'react';
+
+const Header = ({ onNavigate, activePage }) => {
+	const handleClick = (page) => (event) => {
+		event.preventDefault();
+		if (typeof onNavigate === 'function') {
+			onNavigate(page);
+		}
+	};
+
+	return (
+		<header className="app-header">
+			<div className="app-header__inner">
+				<div className="app-header__brand">
+					<span className="app-header__logo">React + PHP</span>
+					<span className="app-header__subtitle">Test app for code-export</span>
+				</div>
+
+				<nav className="app-header__nav">
+					<a
+						href="#home"
+						onClick={handleClick('home')}
+						className={activePage === 'home' ? 'is-active' : ''}
+					>
+						Home
+					</a>
+					<a
+						href="#about"
+						onClick={handleClick('about')}
+						className={activePage === 'about' ? 'is-active' : ''}
+					>
+						About
+					</a>
+				</nav>
+			</div>
+		</header>
+	);
+};
+
+export default Header;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/hooks/useTodos.js
+-------------------------------------------------
+
+import { useContext } from 'react';
+import { TodoContext } from '../context/TodoContext.jsx';
+
+// Small convenience hook around the TodoContext.
+// In a real app you might fetch todos from the backend here.
+//
+// For the purposes of the test project, the data is static and lives in the provider.
+
+export const useTodos = () => {
+	const context = useContext(TodoContext);
+
+	if (!context) {
+		throw new Error('useTodos must be used within a TodoProvider');
+	}
+
+	return context;
+};
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/main.jsx
+-------------------------------------------------
+
+import React from 'react';
+import ReactDOM from 'react-dom/client';
+import App from './App.jsx';
+
+// Global styles for the test app
+import './styles/base/reset.css';
+import './styles/base/typography.css';
+import './styles/theme/colors.css';
+import './styles/theme/layout.css';
+
+const rootElement = document.getElementById('root');
+
+if (rootElement) {
+	const root = ReactDOM.createRoot(rootElement);
+
+	root.render(
+		<React.StrictMode>
+			<App />
+		</React.StrictMode>
+	);
+}
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/context/TodoContext.jsx
+-------------------------------------------------
+
+import React, { createContext, useMemo, useState } from 'react';
+
+export const TodoContext = createContext(null);
+
+const createInitialTodos = () => {
+	return [
+		{
+			id: 1,
+			title: 'Review React components in this test app',
+			completed: false
+		},
+		{
+			id: 2,
+			title: 'Inspect the PHP backend structure',
+			completed: true
+		},
+		{
+			id: 3,
+			title: 'Experiment with code-export JSON job definitions',
+			completed: false
+		}
+	];
+};
+
+export const TodoProvider = ({ children }) => {
+	const [todos, setTodos] = useState(createInitialTodos);
+
+	const toggleTodo = (id) => {
+		setTodos((current) =>
+			current.map((todo) =>
+				todo.id === id
+					? { ...todo, completed: !todo.completed }
+					: todo
+			)
+		);
+	};
+
+	const removeTodo = (id) => {
+		setTodos((current) => current.filter((todo) => todo.id !== id));
+	};
+
+	const value = useMemo(() => {
+		return {
+			todos,
+			toggleTodo,
+			removeTodo
+		};
+	}, [todos]);
+
+	return (
+		<TodoContext.Provider value={value}>
+			{children}
+		</TodoContext.Provider>
+	);
+};
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/pages/home/HomePage.jsx
+-------------------------------------------------
+
+import React from 'react';
+import HomeHero from './HomeHero.jsx';
+
+const HomePage = () => {
+	return (
+		<section className="page page--home">
+			<HomeHero />
+			<div className="page__content">
+				<p>
+					This is a small React + PHP test application. It exists purely as sample code for the
+					<code>code-export</code> tool, so the concatenated output resembles a real project.
+				</p>
+				<p>
+					The frontend simulates a single-page application with a couple of routes and a todo list.
+					The backend simulates a tiny JSON API written in PHP.
+				</p>
+			</div>
+		</section>
+	);
+};
+
+export default HomePage;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/pages/home/HomeHero.jsx
+-------------------------------------------------
+
+import React from 'react';
+
+const HomeHero = () => {
+	return (
+		<header className="hero hero--home">
+			<div className="hero__content">
+				<h1 className="hero__title">React + PHP Test App</h1>
+				<p className="hero__subtitle">
+					Used only as a realistic example project for the <code>code-export</code> tool.
+				</p>
+				<ul className="hero__list">
+					<li>Nested React components and pages</li>
+					<li>Simple todo context and hook</li>
+					<li>PHP backend with a JSON API structure</li>
+				</ul>
+			</div>
+		</header>
+	);
+};
+
+export default HomeHero;
+
+-------------------------------------------------
+ test/react-php-app/frontend/src/pages/about/AboutPage.jsx
+-------------------------------------------------
+
+import React from 'react';
+
+const AboutPage = () => {
+	return (
+		<section className="page page--about">
+			<header className="page__header">
+				<h1>About This Test Project</h1>
+			</header>
+
+			<div className="page__content">
+				<p>
+					This project is intentionally small and self-contained. It provides enough files and folder
+					depth for <code>code-export</code> to generate meaningful concatenated output and a directory tree.
+				</p>
+				<p>
+					You can experiment with different filters, exclusions and size limits without worrying
+					about breaking a real application.
+				</p>
+				<p>
+					The code is not meant to be production ready. It is simply a snapshot of a plausible
+					React frontend and PHP backend, which makes it convenient as input for AI-assisted analysis.
+				</p>
+			</div>
+		</section>
+	);
+};
+
+export default AboutPage;
+
